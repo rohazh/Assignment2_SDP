@@ -81,33 +81,7 @@ factory uml
 └─────────────────────┘ └─────────────────────┘ └────────────────────────┘
 
 
-                    ┌─────────────────────────┐
-                    │ <<abstract>>            │
-                    │     PaymentGateway      │
-                    ├─────────────────────────┤
-                    │ # createProcessor()     │
-                    │ + processTransaction()  │
-                    └────────────▲────────────┘
-                                 │ extends
-              ┌──────────────────┼──────────────────┐
-              │                  │                  │
-     ┌────────────────┐ ┌──────────────────┐ ┌────────────────────┐
-     │   VisaGateway  │ │MasterCardGateway │ │ LocalCardGateway   │
-     ├────────────────┤ ├──────────────────┤ ├────────────────────┤
-     │createProcessor()│ │createProcessor() │ │createProcessor()   │
-     └───────┬────────┘ └────────┬─────────┘ └─────────┬──────────┘
-             │                   │                     │
-             │ creates           │ creates             │ creates
-             ▼                   ▼                     ▼
-     VisaPaymentProcessor  MasterCardPaymentProcessor LocalCardPaymentProcessor
-
-
-                    ┌──────────────────────┐
-                    │   FactoryMethodDemo  │
-                    └──────────┬───────────┘
-                               │ uses
-                               ▼
-                       PaymentGateway
+                   
 
 abstractfactory uml
                          ┌──────────────────────────────┐
