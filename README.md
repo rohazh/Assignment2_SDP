@@ -59,3 +59,75 @@ java -cp out abstractfactory.AbstractFactoryDemo
 ## When this would be over-engineering
 
 For a payment terminal that will only ever support one card network and one region, both patterns add indirection with no payoff — a couple of `if` statements would be simpler and easier to read. The patterns earn their cost only once there are genuinely multiple, independently evolving variants and/or a real risk of a family being assembled inconsistently.
+
+
+
+
+
+
+factory uml
+                    ┌─────────────────────────┐
+                    │   <<interface>>         │
+                    │     PaymentProcessor    │
+                    ├─────────────────────────┤
+                    │ + processPayment()      │
+                    └────────────▲────────────┘
+                                 │ implements
+              ┌──────────────────┼──────────────────┐
+              │                  │                  │
+┌─────────────────────┐ ┌─────────────────────┐ ┌────────────────────────┐
+│ VisaPaymentProcessor│ │MasterCardPayment    │ │LocalCardPayment        │
+│                     │ │Processor            │ │Processor               │
+└─────────────────────┘ └─────────────────────┘ └────────────────────────┘
+
+
+                    ┌─────────────────────────┐
+                    │ <<abstract>>            │
+                    │     PaymentGateway      │
+                    ├─────────────────────────┤
+                    │ # createProcessor()     │
+                    │ + processTransaction()  │
+                    └────────────▲────────────┘
+                                 │ extends
+              ┌──────────────────┼──────────────────┐
+              │                  │                  │
+     ┌────────────────┐ ┌──────────────────┐ ┌────────────────────┐
+     │   VisaGateway  │ │MasterCardGateway │ │ LocalCardGateway   │
+     ├────────────────┤ ├──────────────────┤ ├────────────────────┤
+     │createProcessor()│ │createProcessor() │ │createProcessor()   │
+     └───────┬────────┘ └────────┬─────────┘ └─────────┬──────────┘
+             │                   │                     │
+             │ creates           │ creates             │ creates
+             ▼                   ▼                     ▼
+     VisaPaymentProcessor  MasterCardPaymentProcessor LocalCardPaymentProcessor
+
+
+                    ┌──────────────────────┐
+                    │   FactoryMethodDemo  │
+                    └──────────┬───────────┘
+                               │ uses
+                               ▼
+                       PaymentGateway
+
+abstractfactory uml
+                         ┌──────────────────────────────┐
+                         │ <<interface>>                 │
+                         │   PaymentComponentFactory     │
+                         ├──────────────────────────────┤
+                         │ + createCard()                │
+                         │ + createReceipt()             │
+                         │ + createValidator()           │
+                         └───────────────▲──────────────┘
+                                         │
+                    ┌────────────────────┼────────────────────┐
+                    │                    │                    │
+          ┌─────────────────┐  ┌─────────────────┐  ┌────────────────────┐
+          │ USPaymentFactory│  │EUPaymentFactory │  │AsiaPaymentFactory  │
+          └───────┬─────────┘  └───────┬─────────┘  └──────────┬─────────┘
+                  │                    │                       │
+          creates│                    │creates                │creates
+                  │                    │                       │
+       ┌──────────┼──────────┐   ┌─────┼──────────┐    ┌──────┼──────────┐
+       ▼          ▼          ▼   ▼     ▼          ▼    ▼      ▼          ▼
+   USCard     USReceipt  USValidator EUCard  EUReceipt EUValidator AsiaCard
+                                                            ...
