@@ -61,7 +61,12 @@ java -cp out abstractfactory.AbstractFactoryDemo
 For a payment terminal that will only ever support one card network and one region, both patterns add indirection with no payoff — a couple of `if` statements would be simpler and easier to read. The patterns earn their cost only once there are genuinely multiple, independently evolving variants and/or a real risk of a family being assembled inconsistently.
 
 
-<img src="abstract_factory_uml.png" width="300" alt="">
+<img src="abstract_factory_uml.png" width="700" alt="abstractfactory">
+
+
+<img src="factory_method_uml.png" width="700" alt="factory">
+
+
 
 
 
